@@ -60,11 +60,12 @@
     "build:plugin": "tsc",
     "copy:wasm": "bash scripts/copy-wasm.sh",
     "build:webapp": "npm run copy:wasm && vite build",
-    "build": "npm run build:plugin && npm run typecheck:webapp && npm run build:webapp",
+    "build": "npm run build:plugin && npm run typecheck:webapp && npm run typecheck:test && npm run build:webapp",
     "build:all": "npm run lint && npm run build && npm run test",
     "dev": "npm run copy:wasm && vite",
     "test": "vitest run",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "typecheck:test": "tsc -p tsconfig.test.json"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
