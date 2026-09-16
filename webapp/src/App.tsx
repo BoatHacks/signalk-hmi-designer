@@ -41,6 +41,7 @@ import {
   fetchSelfPaths,
   loadSavedLayout,
   pushLayout,
+  resolveBindPath,
   saveLayout,
   type DiscoveredDevice,
   type MetaZone,
@@ -631,7 +632,7 @@ export function App(): React.JSX.Element {
     () => screens.flatMap((s) => s.widgets.flatMap(bindsOf)),
     [screens]
   )
-  const skValues = useSkValues(boundPaths)
+  const skValues = useSkValues(boundPaths, paths)
 
   // Notifications widgets are fed by polling SK's notifications.*
   // tree. Only poll if a layout actually uses a notifications widget
@@ -875,7 +876,13 @@ export function App(): React.JSX.Element {
   const applyBind = (id: string, path: string): void => {
     updateWidget(id, { bind: path })
     if (!path) return
-    void fetchPathMeta(path).then((meta) => {
+    // A manually-extended bind (e.g. `bar.foo.thing.value.name` drilling
+    // into a JSON-object-valued path) has no meta of its own — fetch
+    // from the real SK path it extends, but keep prefill/zone state
+    // keyed by the full bind so the wasm bridge (which subjects by the
+    // literal bind string) still gets it under the right key.
+    const { skPath } = resolveBindPath(path, paths)
+    void fetchPathMeta(skPath).then((meta) => {
       if (!meta) return
       if (meta.zones && meta.zones.length > 0) {
         setPathZones((prev) => {
@@ -1045,7 +1052,8 @@ export function App(): React.JSX.Element {
           // prefill back to the right slot without re-traversing
           // the layout.
           const widId = w.id
-          void fetchPathMeta(p).then((meta) => {
+          const { skPath } = resolveBindPath(p, paths)
+          void fetchPathMeta(skPath).then((meta) => {
             if (!meta) return
             if (meta.zones && meta.zones.length > 0) {
               setPathZones((prev) => {

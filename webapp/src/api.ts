@@ -228,6 +228,37 @@ export interface DisplayDefaults {
   decimals: number
 }
 
+/**
+ * Split a widget bind that may reach past a real SignalK path into a
+ * JSON object/metadata field (e.g. `bar.foo.thing.value.name` where
+ * `bar.foo.thing` is the actual SK leaf and `.value.name` drills into
+ * its object value) into the real SK path to subscribe/fetch-meta on
+ * plus the extra dotted segments to resolve client-side.
+ *
+ * Matches against the longest known SK path that is a dot-segment
+ * prefix of `bind` (never a substring split mid-segment). Falls back
+ * to treating the whole bind as a literal SK path — with no extra
+ * field — when it's an exact known path, `knownPaths` is empty (not
+ * loaded yet), or nothing matches, which reproduces the pre-existing
+ * behaviour for ordinary binds.
+ */
+export function resolveBindPath(
+  bind: string,
+  knownPaths: readonly string[]
+): { skPath: string; fieldPath: string[] } {
+  if (!bind) return { skPath: bind, fieldPath: [] }
+  const known = new Set(knownPaths)
+  if (known.has(bind)) return { skPath: bind, fieldPath: [] }
+  const segments = bind.split('.')
+  for (let i = segments.length - 1; i > 0; i--) {
+    const prefix = segments.slice(0, i).join('.')
+    if (known.has(prefix)) {
+      return { skPath: prefix, fieldPath: segments.slice(i) }
+    }
+  }
+  return { skPath: bind, fieldPath: [] }
+}
+
 /** Fetch metadata for a SK path. Returns null on 404 / non-200. */
 export async function fetchPathMeta(skPath: string): Promise<PathMeta | null> {
   // Sentinel binds (`@drop_here`) are local device actions, not SignalK
