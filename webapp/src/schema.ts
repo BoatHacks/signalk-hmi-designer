@@ -318,6 +318,14 @@ export interface Layout {
    *  between screens. Only relevant when `screens.length > 1`;
    *  ignored otherwise. Default 56 px. */
   tab_strip_height?: number
+  /** Layout-wide color defaults, applied to the whole screen. `bg`
+   *  fills the screen background (omit for the firmware's default
+   *  dark theme). `fg` and `accent` are the fallback text/indicator
+   *  and active-fill colors for bars, arcs and buttons when a widget
+   *  has no matching SK zone and no `bg_color`/`fg_color` override —
+   *  the same zone > per-widget override > this > firmware-hardcoded-
+   *  default precedence used everywhere else. Omit any field to keep
+   *  the firmware default for it. */
   theme?: { bg?: string; fg?: string; accent?: string }
   /** Layout-level alert-overlay configuration. Default behaviour
    *  when omitted: enabled, min_state="alarm", modal ack. */
