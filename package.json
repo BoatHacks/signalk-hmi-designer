@@ -46,6 +46,7 @@
     ]
   },
   "files": [
+    "icon.svg",
     "plugin/**/*",
     "public/**/*",
     "LICENSE.md",
