@@ -124,11 +124,16 @@ npm install
 npm run dev          # vite at http://localhost:5173
                      # proxies /signalk + /plugins to $SIGNALK_DEV_URL
                      # (default 127.0.0.1:3000)
-npm run build:all    # lint + tsc + vite build + vitest
+npm run build:all    # lint + tsc (plugin, webapp, tests) + vite build + vitest
 ```
 
-`npm run build:all` is the gate. Tests use vitest; canvas/UI
-behaviour gets tested via the schema + display-defaults suites.
+`npm run build:all` is the gate. Tests use vitest and are type-checked
+under the same strict settings as the sources (`tsconfig.test.json`,
+run by `npm run typecheck:test` inside `build`), so a test with a type
+error fails the gate. `test/plugin.test.ts` covers the server-side
+plugin (layout persistence, device-proxy, mDNS `/devices`) against a
+real express router; canvas/UI behaviour gets tested via the schema +
+display-defaults suites.
 
 When iterating against the local SK server on :4100:
 
