@@ -2197,6 +2197,20 @@ export function App(): React.JSX.Element {
                   </select>
                 </label>
               )}
+              {selected.type === 'label' && (
+                <label>
+                  prefer description
+                  <input
+                    type="checkbox"
+                    checked={Boolean(selected.prefer_description)}
+                    onChange={(e) =>
+                      updateWidget(selected.id, {
+                        prefer_description: e.target.checked || undefined
+                      })
+                    }
+                  />
+                </label>
+              )}
               {/* ---- Colors (applicable to every widget kind) ---- */}
               <div className="hr" />
               <label>

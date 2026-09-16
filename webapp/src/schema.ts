@@ -1,4 +1,4 @@
-// Mirror of the JLP device-side schema v1 (sensesp-p4-cockpit
+// Mirror of the JLP device-side schema v1 (espos-p4-cockpit
 // src/jlp/widgets/widget_factory.cpp). Kept here as the single
 // source of truth on the designer side; the runtime /hello response
 // from the device adds the authoritative widget catalog.
@@ -56,6 +56,10 @@ export interface WidgetCommon {
 
 export interface LabelWidget extends WidgetCommon {
   type: 'label'
+  /** Show the SK meta `description` instead of the formatted live
+   *  value when bound (e.g. a switch-state path shows "BMS DnC"
+   *  instead of "1.0"). Off by default — the value is shown. */
+  prefer_description?: boolean
 }
 
 /** Big-number readout tile. Always shows the formatted live value

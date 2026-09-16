@@ -2,7 +2,7 @@
 
 A SignalK webapp + plugin that designs **JSON Layouts** for runtime-
 rendering display devices and pushes them over HTTP. Reference target
-is [sensesp-p4-cockpit](https://github.com/dirkwa/sensesp-p4-cockpit)
+is [espos-p4-cockpit](https://github.com/dirkwa/espos-p4-cockpit)
 running the JLP (JSON Layout Player) on an ESP32-P4 / Waveshare 7B.
 Any device that honours the same `GET /hello` + `POST /layout`
 contract works.
@@ -112,9 +112,10 @@ For widgets that bind **multiple** SK paths (`bargroup`, `list`):
   `displayUnits.formula` (`value`, `value - N`, `value + N`, `value *
   N`, `value / N`) into `{unit, scale, offset, decimals}`. Use it to
   prefill the inspector when the user picks a path.
-- A label widget bound to a SK path **prefers `description` over the
-  formatted value**, matching firmware behaviour. So a switch state
-  bind shows "BMS DnC" instead of "1.0".
+- A label widget bound to a SK path shows the **formatted live value**
+  by default, matching firmware behaviour. Set `prefer_description`
+  on the widget to show the SK `description` instead — e.g. a switch
+  state bind shows "BMS DnC" instead of "1.0".
 
 ## Build / dev workflow
 
